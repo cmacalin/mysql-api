@@ -1,6 +1,7 @@
 const mysql = require('mysql');
 const queries = require('./queries/qasystem.queries');
-const user_queries = require('./queries/user.queries');
+const userQueries = require('./queries/user.queries');
+const authQueries = require('./queries/auth.queries');
 
 const host = process.env.DB_HOST || 'localhost';
 
@@ -8,13 +9,14 @@ const user = process.env.DB_USER || 'root';
 
 const password = process.env.DB_PASS || 'password';
 
-const database = process.env.DB_DATABASE || 'qasystem';
+const database = process.env.DB_DATABASE || 'tododb';
 
 const con = mysql.createConnection({
     host,
     user,
     password,
-    database
+    database,
+    port: 3306
 });
 
 con.connect(function(error) {
@@ -30,7 +32,7 @@ con.connect(function(error) {
         console.log('System table created or already exists.');
     });
 
-    con.query(user_queries.CREATE_USER_TABLE, function(error, result) {
+    con.query(authQueries.CREATE_USERS_TABLE, function(error, result) {
         if(error) {
             throw error;
         }

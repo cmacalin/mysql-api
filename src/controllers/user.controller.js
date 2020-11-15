@@ -1,55 +1,36 @@
+const jwt = require('jsonwebtoken');
+const jwtdecode = require('jwt-decode');
+
 const con = require('../db-config');
+const jwtconfig = require('../jwt-config');
 const queries = require('../queries/user.queries');
 
-// CRUD Functions
-exports.getAllUsers = function(request, response) {
-    con.query(queries.ALL_USERS, function(error, result) {
-        if(error) {
-            response.send(error);
-        }
-        response.json(result);
-    });
-};
+exports.getCurrentUser = function(request, response) {
+    const token = request.header('auth-token');
+    const decoded = jwtdecode(token);
 
-exports.getUser = function(request, response) {
-    con.query(queries.SINGLE_USER, function(error, result) {
-        if(error) {
-            response.send(error);
-        }
-        response.json(result);
-    });
-};
+    if (!token) {
+        response.status(401);
+        response.send({auth: false, msg: 'Access forbidden.'});
+    }
 
-exports.createUser = function(request, response) {
-    con.query(queries.ADD_USER, function(error, result) {
-        if(error) {
-            response.send(error);
+    jwt.verify(token, jwtconfig.secret, function(error, decoded) {
+        if (error) {
+            response.status(500);
+            response.send({auth: false, msg: 'Failed to authenticate.'});
         }
-        response.json(result);
-        response.json({ message: 'Number of records added: ' + result.rowsAffected });
-    });
-};
-
-exports.updateUser = function(request, response) {
-  con.query(
-      queries.UPDATE_USER,
-      [request.body.name, request.body.status, request.params.userId],
-      function(error, data) {
-          if(error) {
-            response.send(error);
-          }
-          response.json(data);
-      }
-    );
-};
-
-exports.deleteUser = function(request, response) {
-    con.query(queries.DELETE_USER,
-        [request.params.userId],
-        function(error) {
-        if(error) {
-            response.send(error);
+    })
+    con.query(queries.GET_USER_BY_USER_ID_WITH_PW, [decoded.id], function(error, user) {
+        if (error) {
+            response.status(500);
+            response.send({msg: 'Error trying to find user.'});
         }
-        response.json({message: "Task deleted"});
+
+        if (!user) {
+            response.status(400);
+            response.send({msg: 'User not found.'});
+        }
+        response.status(200);
+        response.send(user);
     });
 };
