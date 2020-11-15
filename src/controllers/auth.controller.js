@@ -8,7 +8,7 @@ const userQueries = require('../queries/user.queries');
 
 exports.registerUser = function(request, response) {
     const passwordHash = bcrypt.hashSync(request.body.password, 10);
-    console.log('hi1');
+
     con.query(
         authQueries.INSERT_NEW_USER,
         [request.body.username, request.body.email, request.body.first_name, request.body.last_name, passwordHash],
@@ -24,7 +24,6 @@ exports.registerUser = function(request, response) {
                     response.status(500);
                     response.send({msg: 'User not found.'});
                 }
-
                 console.log(user);
                 response.send(user);
             });
@@ -48,11 +47,13 @@ exports.login = function(request, response) {
             bcrypt.compare(request.body.password, user[0].password)
                 .then(function(validPassword) {
                     if (!validPassword) {
+                        console.log("Password wrong");
                         response.status(400).send({msg: 'Password invalid'});
                     }
                     else {
                         const token = jwt.sign({id: user[0].user_id}, jwtconfig.secret);
                         response.header('auth-token', token).send({auth: true, msg: 'Logged in successfully!'});
+                        console.log("Login successul");
                     }
                 }).catch(console.log);
         }

@@ -1,5 +1,6 @@
 const express = require('express');
 const parser = require('body-parser');
+const cors = require('cors');
 
 const systemRoutes = require('./routes/qasystem.routes');
 const userRoutes = require('./routes/user.routes');
@@ -8,7 +9,9 @@ const middleware = require('./middleware/errors.middleware');
 
 const app = express();      // express needs to be initialized
 const port = process.env.PORT || 3000;
-const logLevel = process.env.LOG_LEVEL || 'dev';
+
+// Allow cross-origin calls from a different port
+app.use(cors());
 
 // Middleware
 app.use(parser.urlencoded({extended: false }));
