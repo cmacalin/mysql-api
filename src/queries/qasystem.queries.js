@@ -14,7 +14,7 @@ exports.ALL_TASKS = `SELECT * FROM qasystem`;
 exports.SINGLE_TASK = `SELECT * FROM qasystem WHERE id = ?`;
 
 // Adds a new system task
-exports.ADD_TASK = `INSERT INTO qasystem (name) VALUES (?)`;
+exports.ADD_TASK = `INSERT INTO qasystem (name, status) VALUES (?, ?)`;
 
 // Update existing task within table
 exports.UPDATE_TASK = `UPDATE qasystem SET name = ?, status = ? WHERE id = ?`;

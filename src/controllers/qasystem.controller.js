@@ -21,13 +21,17 @@ exports.getTask = function(request, response) {
 };
 
 exports.createTask = function(request, response) {
-    con.query(queries.ADD_TASK, function(error, result) {
-        if(error) {
-            response.send(error);
+    con.query(
+        queries.ADD_TASK,
+        [request.body.name, request.body.status],
+        function(error, result) {
+            if(error) {
+                console.log(error);
+                response.send(error);
+            }
+            response.json(result);
         }
-        response.json(result);
-        response.json({ message: 'Number of records added: ' + result.rowsAffected });
-    });
+    );
 };
 
 exports.updateTask = function(request, response) {
