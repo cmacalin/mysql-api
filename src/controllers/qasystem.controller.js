@@ -12,7 +12,8 @@ exports.getAllTasks = function(request, response) {
 };
 
 exports.getTask = function(request, response) {
-    con.query(queries.SINGLE_TASK, function(error, result) {
+    console.log('hi');
+    con.query(queries.SINGLE_TASK, [request.params.systemId], function(error, result) {
         if(error) {
             response.send(error);
         }
@@ -26,10 +27,10 @@ exports.createTask = function(request, response) {
         [request.body.name, request.body.status],
         function(error, result) {
             if(error) {
-                console.log(error);
+                console.log('resp: ' + response.status);
                 response.send(error);
             }
-            response.json(result);
+            response.json({message: "Task added successfully"});
         }
     );
 };
@@ -37,19 +38,19 @@ exports.createTask = function(request, response) {
 exports.updateTask = function(request, response) {
   con.query(
       queries.UPDATE_TASK,
-      [request.body.name, request.body.status, request.params.taskId],
+      [request.body.name, request.body.status, request.params.systemId],
       function(error, data) {
           if(error) {
             response.send(error);
           }
-          response.json(data);
+          response.json({message: "Task updated successfully"});
       }
     );
 };
 
 exports.deleteTask = function(request, response) {
     con.query(queries.DELETE_TASK,
-        [request.params.taskId],
+        [request.params.systemId],
         function(error) {
         if(error) {
             response.send(error);

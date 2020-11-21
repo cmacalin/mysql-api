@@ -7,6 +7,8 @@ const authQueries = require('../queries/auth.queries');
 const userQueries = require('../queries/user.queries');
 
 exports.registerUser = function(request, response) {
+    checkAllFields(request, response);
+
     const passwordHash = bcrypt.hashSync(request.body.password, 10);
 
     con.query(
@@ -14,24 +16,35 @@ exports.registerUser = function(request, response) {
         [request.body.username, request.body.email, request.body.first_name, request.body.last_name, passwordHash],
         function(error, result) {
             if (error) {
-                console.log(error);
+                console.log('Error: ' + error);
                 response.status(500);
                 response.send({msg: 'Registration could not be completed. Please try again later.'});
             }
-
-            con.query(userQueries.GET_USER_BY_USERNAME, [request.body.username], function(error, user){
-                if (error) {
-                    response.status(500);
-                    response.send({msg: 'User not found.'});
-                }
-                console.log(user);
-                response.send(user);
-            });
+            else {
+                con.query(userQueries.GET_USER_BY_USERNAME, [request.body.username], function(error, user){
+                    if (error) {
+                        response.status(500);
+                        response.send({msg: 'User not found.'});
+                    } else {
+                        response.send({msg: 'User successfully created!'});
+                    }
+                });
+            }
         }
     )
 }
 
 exports.login = function(request, response) {
+    if (!request.body.password) {
+        response.status(500)
+        response.json({msg: "Please enter password"});
+    }
+    if (!request.body.username) {
+        response.status(500)
+        response.json({msg: "Please enter username"});
+    }
+
+    console.log(request.body);
     con.query(
         userQueries.GET_USER_BY_USERNAME_WITH_PW,
         [request.body.username],
@@ -42,7 +55,7 @@ exports.login = function(request, response) {
                 response.send({msg: 'User could not be retrieved'});
             }
 
-            console.log(user);
+            console.log(user[0]);
 
             bcrypt.compare(request.body.password, user[0].password)
                 .then(function(validPassword) {
@@ -52,8 +65,8 @@ exports.login = function(request, response) {
                     }
                     else {
                         const token = jwt.sign({id: user[0].user_id}, jwtconfig.secret);
+                        response.status(200);
                         response.header('auth-token', token).send({auth: true, msg: 'Logged in successfully!'});
-                        console.log("Login successul");
                     }
                 }).catch(console.log);
         }
@@ -62,6 +75,7 @@ exports.login = function(request, response) {
 
 exports.updateUser = function(request, response) {
     console.log(request);
+    checkAllFields(request, response);
     con.query(
         userQueries.GET_USER_BY_USER_ID_WITH_PW,
         [request.user.id],
@@ -88,4 +102,8 @@ exports.updateUser = function(request, response) {
             )
         }
     )
+}
+
+checkAllFields = function(request, response){
+
 }
