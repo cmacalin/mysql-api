@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const jwtconfig = {
-    access: 'accesssecret',
+    access: 'testsecret123',
     refresh: 'refreshsecret',
 };
 

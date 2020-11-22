@@ -17,15 +17,14 @@ if (env != 'test') {
     app.use(logger(logLevel));
 }
 
+// Middleware
+app.use(parser.json());
+app.use(parser.urlencoded({extended: false }));
+
 // Allow cross-origin calls from a different port
 app.use(cors());
 
-// Middleware
-app.use(parser.urlencoded({extended: false }));
-app.use(parser.json());
-
 // HANDLING ROUTES FOR SYSTEM
-
 // Handle routes for system tasks
 app.use('/api/qasystem', systemRoutes); // http://localhost:3000/qasystem
 

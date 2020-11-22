@@ -1,18 +1,22 @@
 const bcrypt = require('bcryptjs');
-const query = require('../utils/query');
 const connection = require("../db-config");
+const query = require('../utils/query');
 const {GET_USER_BY_USER_ID, GET_USER_BY_USER_ID_WITH_PW, UPDATE_USER} = require('../queries/user.queries');
 
-exports.getCurrentUser = async(request, response) => {
+exports.getCurrentUser = async function (request, response) {
+    const con = await connection().catch((error) => {
+        throw error;
+    });
+    console.log("request: " + request.id);
     const decoded = request.user;
-
+    console.log("decoded: " + decoded);
     if (decoded.id) {
+        /*
         const con = await connection().catch((error) => {
             throw error;
         });
-
-        const user = await query(con, GET_USER_BY_USER_ID, [decoded.id]).catch (
-            (error) => {
+        */
+        const user = await query(con, GET_USER_BY_USER_ID, [decoded.id]).catch ((error) => {
                 response.status(500);
                 response.send({message: 'User not found.'});
             }
@@ -47,23 +51,29 @@ exports.updateUser = async function (request, response) {
             response.json({ message: 'Invalid password!' });
         });
 
-    if (!passwordUnchanged) {
-        const passwordHash = bcrypt.hashSync(request.body.password);
+    console.log(user[0].username);
 
+    if(!passwordUnchanged) {
+        console.log('use: ' + user[0].user_id);
+        const passwordHash = bcrypt.hashSync(request.body.password);
         const result = await query(con, UPDATE_USER, [
             request.body.username,
             request.body.email,
             request.body.first_name,
             request.body.last_name,
             passwordHash,
-            user[0].id,
+            user[0].user_id,
         ]).catch((error) => {
+            console.log(error);
             response.status(500).send({ message: 'Could not update user settings.' });
         });
-
-        if (result.affectedRows === 1) {
-            response.json({ msg: 'User info successfully updated!' });
+        console.log(result);
+        if (result.affectedRows == 1) {
+            response.json({ message: 'User info successfully updated!'});
         }
-        response.json({ msg: 'No updated info' });
     }
+    else {
+        response.json({ message: 'No updated info' });
+    }
+
 };

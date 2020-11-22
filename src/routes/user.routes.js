@@ -7,6 +7,6 @@ const userRoutes = express.Router();
 
 
 userRoutes.get('/currentUser', getCurrentUser);
-userRoutes.post('/currentUser/update', accessible, updateUser);
+userRoutes.put('/currentUser/update', accessible, updateUser);
 
 module.exports = userRoutes;      // Makes this an exposed module that can be accessed

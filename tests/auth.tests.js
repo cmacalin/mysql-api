@@ -10,11 +10,11 @@ describe('Auth API service', () => {
     // run one time then skip once working
     it.skip('should POST a new user', (done) => {
         const expected = {message: 'User successfully created!'};
-
+        // Last used: 4
         const testUser = {
-            username: 'testUser2',
-            email: 'tes2t@example.com',
-            first_name: 'Test2',
+            username: 'testUser4',
+            email: 'test4@example.com',
+            first_name: 'Test4',
             last_name: 'User',
             password: 'testpassword'
         };
@@ -52,7 +52,7 @@ describe('Auth API service', () => {
             });
     });
 
-    it('should POST a login for an existing', (done) => {
+    it('should POST a login for an existing account', (done) => {
         const testLoginUser = {
             username: 'user1',
             password: 'aaaaaa'
@@ -64,7 +64,6 @@ describe('Auth API service', () => {
             .end((error, response) => {
                 expect(response.status).to.eql(200);
                 expect(response.body.auth).to.be.true;
-
                 done();
             });
     });

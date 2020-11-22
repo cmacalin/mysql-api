@@ -23,7 +23,6 @@ const connection = async () =>
                 return;
             }
         });
-        console.log('Connected');
         resolve(con);
 });
 
@@ -38,13 +37,13 @@ const connection = async () =>
         }
     );
 
-    const systemDbCcreated = await query(_con, CREATE_USERS_TABLE).catch (
+    const systemDbCreated = await query(_con, CREATE_USERS_TABLE).catch (
         (error) => {
             console.log(error);
         }
     );
 
-    if(!!userDbCreated && !!systemDbCcreated) {
+    if(!!userDbCreated && !!systemDbCreated) {
         console.log('All database tables created');
     }
 })();

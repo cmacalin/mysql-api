@@ -1,4 +1,4 @@
-const {jwtconfig, verifyToken } = require('../utils/jwt-helpers');
+const {jwtconfig, verifyToken} = require('../utils/jwt-helpers');
 
 module.exports = (request, response, next) => {
     const authHeader = request.headers['auth-token'] || request.headers['authorization'];
@@ -11,6 +11,7 @@ module.exports = (request, response, next) => {
 
     try {
         // verify the token is correct
+        console.log('hello?');
         const user = verifyToken(accessToken, jwtconfig.access, request, response);
         request.user = user;
         next();

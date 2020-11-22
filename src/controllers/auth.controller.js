@@ -1,16 +1,13 @@
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-
-//const con = require('../db-config');
-const {GET_USER_BY_USERNAME, GET_USER_BY_USERNAME_WITH_PW, INSERT_NEW_USER} = require('../queries/user.queries');
-const query = require('../utils/query');
 const connection = require("../db-config");
+const query = require('../utils/query');
+
+const {GET_USER_BY_USERNAME, GET_USER_BY_USERNAME_WITH_PW, INSERT_NEW_USER} = require('../queries/user.queries');
 let {refreshTokens, generateAccessToken, generateRefreshToken} = require('../utils/jwt-helpers');
 
 exports.registerUser = async (request, response) => {
     checkAllFields(request, response);
-
-    const passwordHash = bcrypt.hashSync(request.body.password);
+    const passwordHash = await bcrypt.hash(request.body.password, 10);
     const params = [request.body.username, request.body.email, request.body.first_name, request.body.last_name, passwordHash];
 
     const con = await connection().catch((error) => {
@@ -27,8 +24,8 @@ exports.registerUser = async (request, response) => {
         response.send({message: 'User already exists. Please log in.'});
     } else {
         const result = await query(con, INSERT_NEW_USER, params).catch((error) => {
-           response.status(500);
-           response.send({message: 'Registration could not be completed. Please try again later.'});
+            response.status(500);
+            response.send({message: 'Registration could not be completed. Please try again later.'});
         });
         response.send({message: 'User successfully created!'});
     }
@@ -115,9 +112,9 @@ exports.token = (request, response) => {
 exports.logout = (request, response) => {
     const refreshToken = request.body.token;
     refreshTokens = refreshTokens.filter((t) => t !== refreshToken);
-
     response.send({message: 'User has been logged out'});
 };
+
 checkAllFields = function(request, response){
     if (!request.body.password || !request.body.username || !request.body.first_name || !request.body.last_name || !request.body.email) {
         response.status(500);

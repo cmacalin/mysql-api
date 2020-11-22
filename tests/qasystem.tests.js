@@ -31,7 +31,7 @@ describe('QASystem API Service', function(){
         ];
 
         chai
-            .request('http://localhost:3000')
+            .request(test_url)
             .get('/api/qasystem/3')
             .end(function(error, response) {
                 expect(response.status).to.be.eql(200);
@@ -42,7 +42,7 @@ describe('QASystem API Service', function(){
             });
     });
 
-    it('should POST a new system task', function(done) {
+    it.skip('should POST a new system task', function(done) {
        const newSystemTask = {
            name: 'Testing task',
            status: 'created'

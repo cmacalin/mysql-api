@@ -7,8 +7,8 @@ authRoutes.post('/register', registerUser);
 
 authRoutes.post('/login', login);
 
-// authRoutes.post('/logout', logout);
+authRoutes.post('/logout', logout);
 
-// authRoutes.post('/token', token);
+authRoutes.post('/token', token);
 
 module.exports = authRoutes;
