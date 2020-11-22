@@ -1,60 +1,77 @@
-const con = require('../db-config');
-const queries = require('../queries/qasystem.queries');
+const query = require('../utils/query');
+const connection = require("../db-config");
+const {ALL_TASKS, DELETE_TASK, UPDATE_TASK, ADD_TASK, SINGLE_TASK} = require('../queries/qasystem.queries');
 
 // CRUD Functions
-exports.getAllTasks = function(request, response) {
-    con.query(queries.ALL_TASKS, function(error, result) {
-        if(error) {
-            response.send(error);
-        }
+exports.getAllTasks = async(request, response) => {
+    const con = await connection().catch((error) => {
+        throw error;
+    })
+
+    const tasks = await query(con, ALL_TASKS).catch((error) => {
+        response.send(error);
+    });
+
+    if (tasks.length) {
+        response.send(tasks);
+    }
+};
+
+exports.getTask = async(request, response) => {
+    const con = await connection().catch((error) => {
+        throw error;
+    })
+
+    const task = await query(con, SINGLE_TASK, [request.params.systemId]).catch((error) => {
+        response.send(error);
+    });
+
+    if (task.length) {
+        response.send(task);
+    }
+};
+
+exports.createTask = async(request, response) => {
+    const con = await connection().catch((error) => {
+        throw error;
+    })
+
+    const result = await query(con, ADD_TASK, [request.body.name, request.body.status]).catch((error) => {
+        response.send(error);
+    });
+    console.log(result);
+
+    if (result.affectedRows == 1) {
+        response.json({message: "System task added"});
+    }
+};
+
+exports.updateTask = async(request, response) => {
+    const con = await connection().catch((error) => {
+        throw error;
+    })
+
+    const result = await query(con, UPDATE_TASK, [request.body.name, request.body.status, request.params.systemId]).catch((error) => {
+        response.send(error);
+    });
+    console.log(result);
+
+    if (result.affectedRows == 1) {
         response.json(result);
+    }
+};
+
+exports.deleteTask = async(request, response) => {
+    const con = await connection().catch((error) => {
+        throw error;
+    })
+
+    const result = await query(con, DELETE_TASK, [request.params.systemId]).catch((error) => {
+        response.send(error);
     });
-};
+    console.log(result);
 
-exports.getTask = function(request, response) {
-    console.log('hi');
-    con.query(queries.SINGLE_TASK, [request.params.systemId], function(error, result) {
-        if(error) {
-            response.send(error);
-        }
-        response.json(result);
-    });
-};
-
-exports.createTask = function(request, response) {
-    con.query(
-        queries.ADD_TASK,
-        [request.body.name, request.body.status],
-        function(error, result) {
-            if(error) {
-                console.log('resp: ' + response.status);
-                response.send(error);
-            }
-            response.json({message: "Task added successfully"});
-        }
-    );
-};
-
-exports.updateTask = function(request, response) {
-  con.query(
-      queries.UPDATE_TASK,
-      [request.body.name, request.body.status, request.params.systemId],
-      function(error, data) {
-          if(error) {
-            response.send(error);
-          }
-          response.json({message: "Task updated successfully"});
-      }
-    );
-};
-
-exports.deleteTask = function(request, response) {
-    con.query(queries.DELETE_TASK,
-        [request.params.systemId],
-        function(error) {
-        if(error) {
-            response.send(error);
-        }
-        response.json({message: "Task deleted"});
-    });
+    if (result.affectedRows == 1) {
+        response.json({message: "System task successfully deleted"});
+    }
 };

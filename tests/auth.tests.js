@@ -9,12 +9,12 @@ const test_url = 'http://localhost:3000';
 describe('Auth API service', () => {
     // run one time then skip once working
     it.skip('should POST a new user', (done) => {
-        const expected = {msg: 'User successfully created!'};
+        const expected = {message: 'User successfully created!'};
 
         const testUser = {
-            username: 'testUser',
-            email: 'test@example.com',
-            first_name: 'Test',
+            username: 'testUser2',
+            email: 'tes2t@example.com',
+            first_name: 'Test2',
             last_name: 'User',
             password: 'testpassword'
         };
@@ -31,7 +31,7 @@ describe('Auth API service', () => {
     });
 
     it('should not POST a new user if they already exist', (done) => {
-        const expected = {msg: 'Registration could not be completed. Please try again later.'};
+        const expected = {message: 'User already exists. Please log in.'};
 
         const existingUser = {
             username: 'user1',
@@ -46,7 +46,7 @@ describe('Auth API service', () => {
             .post('/api/auth/register')
             .send(existingUser)
             .end((error, response) => {
-                expect(response.status).to.eql(500);
+                expect(response.status).to.eql(403);
                 expect(response.body).to.eql(expected);
                 done();
             });
@@ -62,12 +62,28 @@ describe('Auth API service', () => {
             .post('/api/auth/login')
             .send(testLoginUser)
             .end((error, response) => {
-                //expect(response.body.expires_in).to.be.eql(86400);
-                //expect(response.body.access_token).to.be.a('string');
-                //expect(response.body.refresh_token).to.be.a('string');
                 expect(response.status).to.eql(200);
                 expect(response.body.auth).to.be.true;
 
+                done();
+            });
+    });
+
+    it('should not POST new user if information is missing', (done) => {
+        const testUser = {
+            username: 'testUser',
+            email: 'test@example.com',
+            first_name: 'Test',
+            last_name: 'User'
+        };
+        const expected = {msg: "Some information is missing. Please try again."};
+        chai
+            .request(test_url)
+            .post('/api/auth/register')
+            .send(testUser)
+            .end((error, response) => {
+                expect(response.status).to.eql(500);
+                expect(response.body).to.eql(expected);
                 done();
             });
     });

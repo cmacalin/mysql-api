@@ -47,7 +47,7 @@ describe('QASystem API Service', function(){
            name: 'Testing task',
            status: 'created'
        }
-       const expected = {message: "Task added successfully"};
+       const expected = {message: "System task added"};
 
        chai
            .request(test_url)

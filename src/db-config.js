@@ -1,43 +1,52 @@
 const mysql = require('mysql');
-const queries = require('./queries/qasystem.queries');
-const userQueries = require('./queries/user.queries');
-const authQueries = require('./queries/auth.queries');
+const {CREATE_SYSTEM_TABLE} = require('./queries/qasystem.queries');
+const {CREATE_USERS_TABLE} = require('./queries/user.queries');
+const query = require('./utils/query');
 
 const host = process.env.DB_HOST || 'localhost';
-
 const user = process.env.DB_USER || 'root';
-
 const password = process.env.DB_PASS || 'password';
-
 const database = process.env.DB_DATABASE || 'tododb';
 
-const con = mysql.createConnection({
-    host,
-    user,
-    password,
-    database,
-    port: 3306
+const connection = async () =>
+    new Promise((resolve, reject) => {
+        const con = mysql.createConnection({
+            host,
+            user,
+            password,
+            database,
+            port: 3306
+        });
+        con.connect((error) => {
+            if(error) {
+                reject(error);
+                return;
+            }
+        });
+        console.log('Connected');
+        resolve(con);
 });
 
-con.connect(function(error) {
-    if (error) {
+(async () => {
+    const _con = await connection().catch((error) => {
         throw error;
-    }
-    console.log('Connected');
-
-    con.query(queries.CREATE_SYSTEM_TABLE, function(error, result) {
-        if (error) {
-            throw error;
-        }
-        console.log('System table created or already exists.');
     });
 
-    con.query(authQueries.CREATE_USERS_TABLE, function(error, result) {
-        if(error) {
-            throw error;
+    const userDbCreated =  await query(_con, CREATE_SYSTEM_TABLE).catch (
+        (error) => {
+            console.log(error);
         }
-        console.log('User table created or already exists.')
-    })
-});
+    );
 
-module.exports = con;
+    const systemDbCcreated = await query(_con, CREATE_USERS_TABLE).catch (
+        (error) => {
+            console.log(error);
+        }
+    );
+
+    if(!!userDbCreated && !!systemDbCcreated) {
+        console.log('All database tables created');
+    }
+})();
+
+module.exports = connection;
