@@ -11,7 +11,7 @@ const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjA2NDU0
 const test_url = 'http://localhost:3000';
 
 describe('QASystem API Service', function(){
-    it.skip('should GET all system tasks', function(done) {
+    it('should GET all system tasks', function(done) {
         chai
             .request(test_url)
             .get('/api/qasystem')
@@ -24,7 +24,7 @@ describe('QASystem API Service', function(){
             });
     });
 
-    it.skip('should GET a single task', function(done) {
+    it('should GET a single task', function(done) {
         const expected = [
             {
                 system_task_id: 1,
@@ -48,7 +48,7 @@ describe('QASystem API Service', function(){
             });
     });
 
-    it.skip('should POST a new system task', function(done) {
+    it('should POST a new system task', function(done) {
         const newSystemTask = {
            name: 'Testing task',
            status: 'created'

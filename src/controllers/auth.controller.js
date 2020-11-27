@@ -70,7 +70,6 @@ exports.login = async (request, response) => {
         });
 
         refreshTokens.push(refreshToken);
-
         response.header('access_token', accessToken).json({
                 auth: true,
                 message: 'Logged in!',

@@ -30,7 +30,7 @@ describe('Auth API service', () => {
             });
     });
 
-    it.skip('should not POST a new user if they already exist', (done) => {
+    it('should not POST a new user if they already exist', (done) => {
         const expected = {message: 'User already exists. Please log in.'};
 
         const existingUser = {
@@ -52,7 +52,7 @@ describe('Auth API service', () => {
             });
     });
 
-    it.skip('should POST a login for an existing account', (done) => {
+    it('should POST a login for an existing account', (done) => {
         const testLoginUser = {
             username: 'user1',
             password: 'aaaaaa'
@@ -68,7 +68,7 @@ describe('Auth API service', () => {
             });
     });
 
-    it.skip('should not POST new user if information is missing', (done) => {
+    it('should not POST new user if information is missing', (done) => {
         const testUser = {
             username: 'testUser',
             email: 'test@example.com',
