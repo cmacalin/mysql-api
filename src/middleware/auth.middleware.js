@@ -17,6 +17,6 @@ module.exports = (request, response, next) => {
         next();
     } catch (err) {
         response.status(403);
-        response.send({message: 'Auth token not valid'});
+        response.send({message: 'Access token not valid'});
     }
 };

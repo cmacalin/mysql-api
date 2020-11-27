@@ -6,7 +6,7 @@ const accessible = require('../middleware/auth.middleware');
 const userRoutes = express.Router();
 
 
-userRoutes.get('/currentUser', getCurrentUser);
+userRoutes.get('/currentUser', accessible, getCurrentUser);
 userRoutes.put('/currentUser/update', accessible, updateUser);
 
 module.exports = userRoutes;      // Makes this an exposed module that can be accessed

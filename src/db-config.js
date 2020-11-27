@@ -31,13 +31,13 @@ const connection = async () =>
         throw error;
     });
 
-    const userDbCreated =  await query(_con, CREATE_SYSTEM_TABLE).catch (
+    const userDbCreated =  await query(_con, CREATE_USERS_TABLE).catch (
         (error) => {
             console.log(error);
         }
     );
 
-    const systemDbCreated = await query(_con, CREATE_USERS_TABLE).catch (
+    const systemDbCreated = await query(_con, CREATE_SYSTEM_TABLE).catch (
         (error) => {
             console.log(error);
         }

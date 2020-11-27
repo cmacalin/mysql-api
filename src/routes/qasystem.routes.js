@@ -1,13 +1,13 @@
-const {getAllTasks, createTask, getTask, deleteTask, updateTask} = require('../controllers/qasystem.controller');
 const express = require('express');
-// const accessible = require('../middleware/auth.middleware');
+const {getAllTasks, createTask, getTask, deleteTask, updateTask} = require('../controllers/qasystem.controller');
+const accessible = require('../middleware/auth.middleware');
 const systemRoutes = express.Router();
 
-systemRoutes.get('/', getAllTasks).post('/', createTask);
+systemRoutes.get('/', accessible, getAllTasks).post('/', accessible, createTask);
 
 // Methods for calling API
-systemRoutes.get('/:systemId', getTask)
-systemRoutes.put('/:systemId', updateTask)
-systemRoutes.delete('/:systemId', deleteTask);
+systemRoutes.get('/:systemId', accessible, getTask)
+systemRoutes.put('/:systemId', accessible, updateTask)
+systemRoutes.delete('/:systemId', accessible, deleteTask);
 
 module.exports = systemRoutes;      // Makes this an exposed module that can be accessed

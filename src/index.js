@@ -3,9 +3,9 @@ const parser = require('body-parser');
 const logger = require('morgan');
 const cors = require('cors');
 
-const systemRoutes = require('./routes/qasystem.routes');
-const userRoutes = require('./routes/user.routes');
 const authRoutes = require('./routes/auth.routes');
+const userRoutes = require('./routes/user.routes');
+const systemRoutes = require('./routes/qasystem.routes');
 const {error404, error500} = require('./middleware/errors.middleware');
 
 const app = express();      // express needs to be initialized
@@ -18,8 +18,8 @@ if (env != 'test') {
 }
 
 // Middleware
-app.use(parser.json());
 app.use(parser.urlencoded({extended: false }));
+app.use(parser.json());
 
 // Allow cross-origin calls from a different port
 app.use(cors());
