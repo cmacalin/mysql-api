@@ -85,9 +85,7 @@ exports.deleteTask = async(request, response) => {
     const con = await connection().catch((error) => {
         throw error;
     })
-    console.log('req: ' + request.params.systemId);
     const result = await query(con, DELETE_TASK(request.user.id, request.params.systemId)).catch((error) => {
-        console.log('hi11');
         response.json(error);
     });
 
@@ -97,3 +95,18 @@ exports.deleteTask = async(request, response) => {
         response.status(500).json({message: 'Unable to delete selected task'});
     }
 };
+
+exports.deleteAllTasks = async(request, response) => {
+    const con = await connection().catch((error) => {
+        throw error;
+    })
+    const result = await query(con, DELETE_ALL_TASKS(request.user.id)).catch((error) => {
+        response.json(error);
+    })
+
+    if(result.affectedRows > 0) {
+        response.json({message: "All your tasks have been successfully deleted"});
+    } else {
+        response.json({message: "There were no tasks to delete"});
+    }
+}

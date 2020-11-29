@@ -25,3 +25,6 @@ exports.UPDATE_TASK = (user_id, system_task_id, new_values) => `UPDATE qasystem 
 
 // Delete a task using primary key (id)
 exports.DELETE_TASK = (user_id, system_task_id) => `DELETE FROM qasystem WHERE user_id=${user_id} AND system_task_id = ${system_task_id}`;
+
+// Delete all of a user's tasks
+exports.DELETE_TASK = (user_id) => `DELETE FROM qasystem WHERE user_id=${user_id}`;

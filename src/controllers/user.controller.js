@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const connection = require("../db-config");
 const query = require('../utils/query');
-const {GET_USER_BY_USER_ID, GET_USER_BY_USER_ID_WITH_PW, UPDATE_USER} = require('../queries/user.queries');
+const {GET_USER_BY_USER_ID, GET_USER_BY_USER_ID_WITH_PW, UPDATE_USER, DELETE_USER} = require('../queries/user.queries');
 const escape = require('../utils/escape');
 
 exports.getCurrentUser = async function (request, response) {
@@ -80,6 +80,24 @@ exports.updateUser = async function (request, response) {
         response.json({ message: 'User info successfully updated!'});
     } else {
         response.json({ message: 'Nothing to update' });
+    }
+
+};
+
+exports.deleteUser = async function (request, response) {
+    const con = await connection().catch((error) => {
+        throw error;
+    });
+
+    const result = await query(con, DELETE_USER(request.user.id)).catch((error) => {
+        console.log(error);
+        response.status(500).send({ message: 'Could not delete user'});
+    });
+
+    if (result.affectedRows === 1) {
+        response.json({ message: 'User successfully deleted!'});
+    } else {
+        response.json({ message: 'User not in database' });
     }
 
 };
