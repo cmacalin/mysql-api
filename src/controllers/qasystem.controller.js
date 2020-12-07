@@ -2,7 +2,7 @@ const mysql = require('mysql');
 const query = require('../utils/query');
 const connection = require("../db-config");
 const escape = require('../utils/escape');
-const {ALL_TASKS, DELETE_TASK, UPDATE_TASK, ADD_TASK, SINGLE_TASK} = require('../queries/qasystem.queries');
+const {ALL_TASKS, DELETE_TASK, UPDATE_TASK, ADD_TASK, SINGLE_TASK, DELETE_TASKS} = require('../queries/qasystem.queries');
 const {serverError} = require('../utils/handlers');
 
 // CRUD Functions
@@ -77,7 +77,7 @@ exports.updateTask = async(request, response) => {
     if (result.affectedRows == 1) {
         response.json(result);
     } else {
-        response.status(500).json({message: `Unable to update task: '${request.body.task_name}'`});
+        response.status(500).json({message: `Unable to update task: '${request.body.name}'`});
     }
 };
 
@@ -100,7 +100,7 @@ exports.deleteAllTasks = async(request, response) => {
     const con = await connection().catch((error) => {
         throw error;
     })
-    const result = await query(con, DELETE_ALL_TASKS(request.user.id)).catch((error) => {
+    const result = await query(con, DELETE_TASKS(request.user.id)).catch((error) => {
         response.json(error);
     })
 

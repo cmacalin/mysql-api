@@ -9,7 +9,6 @@ let {refreshTokens, generateAccessToken, generateRefreshToken} = require('../uti
 exports.registerUser = async (request, response) => {
     if (allFieldsFilled(request, response)) {
         const passwordHash = await bcrypt.hash(request.body.password, 10).catch((error) => {
-            console.log('blegh');
             console.log(request.body.password);
             console.log(error);
         });
@@ -25,7 +24,6 @@ exports.registerUser = async (request, response) => {
         });
 
         if (user.length === 1) {
-            console.log('hi?');
             response.status(403).json({message: 'User already exists. Please log in.'});
         } else {
             const result = await query(con, INSERT_NEW_USER(username, email, first_name, last_name, password)).catch((error) => {
@@ -78,7 +76,7 @@ exports.login = async (request, response) => {
                 expires_in: 86400,
                 refresh_token: refreshToken,
             });
-    } // else if user doesn't exist
+    }
     else {
         response.status(401).json({message: 'Invalid login'});
     }

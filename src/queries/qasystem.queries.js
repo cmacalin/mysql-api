@@ -4,7 +4,7 @@ exports.CREATE_SYSTEM_TABLE = `CREATE TABLE IF NOT EXISTS qasystem(
     user_id int NOT NULL,
     name varchar(255) NOT NULL,
     created_date DATETIME DEFAULT CURRENT_TIMESTAMP(),
-    status varchar(10) DEFAULT 'pending',
+    status varchar(20) DEFAULT 'pending',
     PRIMARY KEY (system_task_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id)
         ON UPDATE CASCADE
@@ -27,4 +27,4 @@ exports.UPDATE_TASK = (user_id, system_task_id, new_values) => `UPDATE qasystem 
 exports.DELETE_TASK = (user_id, system_task_id) => `DELETE FROM qasystem WHERE user_id=${user_id} AND system_task_id = ${system_task_id}`;
 
 // Delete all of a user's tasks
-exports.DELETE_TASK = (user_id) => `DELETE FROM qasystem WHERE user_id=${user_id}`;
+exports.DELETE_TASKS = (user_id) => `DELETE FROM qasystem WHERE user_id=${user_id}`;

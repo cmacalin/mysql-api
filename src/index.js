@@ -9,7 +9,7 @@ const systemRoutes = require('./routes/qasystem.routes');
 const {error404, error500} = require('./middleware/errors.middleware');
 
 const app = express();      // express needs to be initialized
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 const logLevel = process.env.LOG_LEVEL || 'dev';
 const env = process.env.NODE_ENV;
 
