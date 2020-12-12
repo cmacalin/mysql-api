@@ -9,10 +9,8 @@ let {refreshTokens, generateAccessToken, generateRefreshToken} = require('../uti
 exports.registerUser = async (request, response) => {
     if (allFieldsFilled(request, response)) {
         const passwordHash = await bcrypt.hash(request.body.password, 10).catch((error) => {
-            console.log(request.body.password);
             console.log(error);
         });
-        // const params = [request.body.username, request.body.email, request.body.first_name, request.body.last_name, passwordHash];
         const {username, email, first_name, last_name, password} = escape({...request.body, password: passwordHash});
 
         const con = await connection().catch((error) => {
@@ -78,7 +76,7 @@ exports.login = async (request, response) => {
             });
     }
     else {
-        response.status(401).json({message: 'Invalid login'});
+        response.status(401).json({message: 'Invalid login credentials'});
     }
 };
 

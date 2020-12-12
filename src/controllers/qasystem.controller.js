@@ -69,8 +69,8 @@ exports.updateTask = async(request, response) => {
         throw error;
     })
     const values = _buildValuesString(request);
-
-    const result = await query(con, UPDATE_TASK(request.user.id, request.params.systemId, values)).catch((error) => {
+    console.log(request.body.status);
+    const result = await query(con, UPDATE_TASK(request.user.id, request.params.systemId, request.body.name, request.body.status)).catch((error) => {
         response.send(error);
     });
 

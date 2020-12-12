@@ -21,7 +21,7 @@ exports.SINGLE_TASK = (user_id, system_task_id) => `SELECT * FROM qasystem WHERE
 exports.ADD_TASK = (user_id, input_task_name, input_status) => `INSERT INTO qasystem (user_id, name, status) VALUES (${user_id}, '${input_task_name}','${input_status}')`;
 
 // Update existing task within table
-exports.UPDATE_TASK = (user_id, system_task_id, new_values) => `UPDATE qasystem SET ${new_values} WHERE user_id=${user_id} AND system_task_id=${system_task_id}`;
+exports.UPDATE_TASK = (user_id, system_task_id, input_task_name, input_status) => `UPDATE qasystem SET name='${input_task_name}', status='${input_status}' WHERE user_id=${user_id} AND system_task_id=${system_task_id}`;
 
 // Delete a task using primary key (id)
 exports.DELETE_TASK = (user_id, system_task_id) => `DELETE FROM qasystem WHERE user_id=${user_id} AND system_task_id = ${system_task_id}`;
